@@ -108,9 +108,11 @@ export function ModalContent({
         return;
       }
       if (event.key !== 'Tab' || !node) return;
-      const items = Array.from(node.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
-        (element) => element.offsetParent !== null,
-      );
+      // Elements without a layout box (a hidden dialog, or a test environment)
+      // still take part, so the trap can never lock the keyboard out entirely.
+      const candidates = Array.from(node.querySelectorAll<HTMLElement>(FOCUSABLE));
+      const visible = candidates.filter((element) => element.offsetParent !== null);
+      const items = visible.length ? visible : candidates;
       if (!items.length) return;
       const firstItem = items[0],
         lastItem = items[items.length - 1],

@@ -98,7 +98,7 @@ export default function AnimatedNumber({
 }) {
   const display = useCountUp(value);
   const change = useValueDelta(value);
-  const render = format ?? ((input: number) => Math.round(input).toLocaleString('zh-CN'));
+  const render = format ?? ((input: number) => Math.round(input).toLocaleString('zh-TW'));
 
   return (
     <span
@@ -112,7 +112,7 @@ export default function AnimatedNumber({
           aria-hidden="true"
         >
           {change.direction === 'up' ? '+' : '−'}
-          {Math.abs(change.delta).toLocaleString('zh-CN')}
+          {Math.abs(change.delta).toLocaleString('zh-TW')}
         </i>
       )}
     </span>

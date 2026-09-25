@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   base: './',
@@ -17,5 +17,14 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     chunkSizeWarningLimit: 900,
+  },
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
+    include: ['src/**/*.test.{ts,tsx}'],
+    restoreMocks: true,
+    // The interface primitives render into document.body through portals, so the
+    // component tests need a DOM with layout-free but focus-capable elements.
+    environmentOptions: { jsdom: { pretendToBeVisual: true } },
   },
 });

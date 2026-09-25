@@ -67,7 +67,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import type { Game as State, Playable, Action } from './engine';
-const fmt = (n: number) => Math.round(n).toLocaleString('zh-CN');
+const fmt = (n: number) => Math.round(n).toLocaleString('zh-TW');
 const compact = (n: number) =>
   n >= 10000 ? `${(n / 10000).toFixed(1)}萬` : fmt(n);
 const icons = {
@@ -828,21 +828,28 @@ export default function Game() {
             <div>
               <span>城池駐軍</span>
               <strong>
-                <AnimatedNumber key={city.id} value={city.troops} />
+                <AnimatedNumber
+                  key={`${city.id}-${campaign}`}
+                  value={city.troops}
+                />
                 <small>兵</small>
               </strong>
             </div>
             <Users />
           </div>
           <div className="city-stats">
-            <Stat key={`${city.id}-morale`} label="士氣" value={city.morale} />
-            <Stat key={`${city.id}-wall`} label="城防" value={city.wall} />
+            <Stat
+              key={`${city.id}-morale-${campaign}`}
+              label="士氣"
+              value={city.morale}
+            />
+            <Stat key={`${city.id}-wall-${campaign}`} label="城防" value={city.wall} />
             <div className="economy-row">
-              <ValueFlash key={`${city.id}-farm`} value={city.farm}>
+              <ValueFlash key={`${city.id}-farm-${campaign}`} value={city.farm}>
                 <Wheat />
                 農業 <b>Lv.{city.farm}</b>
               </ValueFlash>
-              <ValueFlash key={`${city.id}-market`} value={city.market}>
+              <ValueFlash key={`${city.id}-market-${campaign}`} value={city.market}>
                 <Coins />
                 商業 <b>Lv.{city.market}</b>
               </ValueFlash>
@@ -1133,7 +1140,7 @@ export default function Game() {
             ))}
           </div>
           <button className="gold-button" onClick={start}>
-            起 兵 出 徵 <ArrowRight size={18} />
+            起 兵 出 征 <ArrowRight size={18} />
           </button>
           <p className="setup-footnote">108 位名將 · 原創頭像 · 三方均衡開局</p>
         </DialogContent>
@@ -1422,7 +1429,7 @@ export default function Game() {
                 </p>
               </div>
               <p className="prototype-note">
-                統率、武力、智略共同決定出征戰力。可在城池指令中任命內政武將，或在出徵時選為主將。數值為本作原創設定。
+                統率、武力、智略共同決定出征戰力。可在城池指令中任命內政武將，或在出征時選為主將。數值為本作原創設定。
               </p>
             </>
           )}

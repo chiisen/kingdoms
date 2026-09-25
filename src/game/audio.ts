@@ -45,7 +45,7 @@ export type Score = {
 
 export const AUDIO_STORAGE_KEY = 'sanguo-jiangshan-audio';
 
-/** D3; the score sits on the 宫商角徵羽 pentatonic shape used by Chinese court music. */
+/** D3; the score sits on the 宮商角徵羽 pentatonic shape used by Chinese court music. */
 export const MUSIC_ROOT_HZ = 146.83;
 
 /** D, F, G, A, C — a minor-pentatonic set that keeps every voice consonant. */
@@ -430,7 +430,7 @@ function bass(ctx: Ctx, dest: AudioNode, time: number, hz: number, gain: number,
   sub.stop(time + duration + 0.05);
 }
 
-/** Inharmonic partials give a bronze bell / 编钟 colour. */
+/** Inharmonic partials give a bronze bell / 編鐘 colour. */
 function bell(ctx: Ctx, dest: AudioNode, time: number, hz: number, gain: number, decay = 2.6) {
   const partials = [1, 2.76, 5.4, 8.9];
   const levels = [1, 0.5, 0.26, 0.12];
