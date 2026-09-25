@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import './ui.css';
+@import './effects.css';
 @custom-variant dark (&:is(.dark *));
 @theme inline {
   --color-background: var(--background);
@@ -21,8 +22,8 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-destructive: #cf796b;
-  --font-sans: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  --font-heading: 'Songti SC', 'STSong', serif;
+  --font-sans: 'PingFang TC', 'PingFang SC', 'Microsoft JhengHei', 'Microsoft YaHei', sans-serif;
+  --font-heading: 'Songti TC', 'Songti SC', 'STSong', serif;
   --radius-lg: 6px;
   --radius-md: 4px;
   --radius-sm: 2px;
@@ -44,7 +45,7 @@
   --ring: #c7a66d;
   --gold: #d0b178;
   --ink: #111b19;
-  --serif: 'Songti SC', 'STSong', 'Noto Serif CJK SC', SimSun, serif;
+  --serif: 'Songti TC', 'Songti SC', 'STSong', 'Noto Serif CJK TC', 'Noto Serif CJK SC', PMingLiU, SimSun, serif;
 }
 * {
   box-sizing: border-box;
@@ -55,7 +56,7 @@ body {
   padding: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-family: 'PingFang TC', 'PingFang SC', 'Microsoft JhengHei', 'Microsoft YaHei', sans-serif;
   font-size: 16px;
 }
 button,
@@ -2235,7 +2236,7 @@ button {
 .officer-view .section-intro {
   margin-bottom: 22px;
 }
-/* 百将风云 · original portrait atlases and readable officer comparisons */
+/* 百將風雲 · original portrait atlases and readable officer comparisons */
 .portrait-art {
   background-repeat: no-repeat;
   background-color: #17221c;

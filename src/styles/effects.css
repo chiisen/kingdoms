@@ -1,0 +1,393 @@
+/* Value-change feedback: counted numbers, floating differences, bar and pip
+   animations. Everything here is additive to globals.css and is switched off
+   when the visitor asks for reduced motion. */
+
+/* ---------- counted numbers ---------- */
+
+.animated-number {
+  position: relative;
+  display: inline-block;
+}
+
+.animated-number-value {
+  font-variant-numeric: tabular-nums;
+}
+
+.animated-number.is-up .animated-number-value {
+  animation: value-rise 900ms ease-out;
+}
+
+.animated-number.is-down .animated-number-value {
+  animation: value-fall 900ms ease-out;
+}
+
+.delta-chip {
+  position: absolute;
+  left: 0;
+  top: -1.1em;
+  font-style: normal;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: delta-float 1.5s ease-out forwards;
+}
+
+.delta-chip.up {
+  color: #b5dd90;
+  text-shadow: 0 0 12px #78a85466;
+}
+
+.delta-chip.down {
+  color: #eaa88f;
+  text-shadow: 0 0 12px #b9664a66;
+}
+
+@keyframes value-rise {
+  0% {
+    color: currentColor;
+    transform: none;
+  }
+  22% {
+    color: #c3ec99;
+    transform: translateY(-2px) scale(1.06);
+  }
+  100% {
+    color: currentColor;
+    transform: none;
+  }
+}
+
+@keyframes value-fall {
+  0% {
+    color: currentColor;
+    transform: none;
+  }
+  22% {
+    color: #f0ac92;
+    transform: translateY(2px) scale(1.06);
+  }
+  100% {
+    color: currentColor;
+    transform: none;
+  }
+}
+
+@keyframes delta-float {
+  0% {
+    opacity: 0;
+    transform: translateY(7px) scale(0.92);
+  }
+  16% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  62% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+}
+
+/* The garrison figure sits under its label, so its chip floats a little lower. */
+.garrison .delta-chip {
+  top: -0.75em;
+}
+
+/* ---------- city stat bars ---------- */
+
+.stat-row i {
+  transition: width 720ms cubic-bezier(0.22, 0.8, 0.26, 1);
+}
+
+.stat-row.flash-up i {
+  animation: bar-rise 960ms ease-out;
+}
+
+.stat-row.flash-down i {
+  animation: bar-fall 960ms ease-out;
+}
+
+@keyframes bar-rise {
+  0% {
+    filter: none;
+  }
+  25% {
+    filter: brightness(1.75) saturate(1.35);
+  }
+  100% {
+    filter: none;
+  }
+}
+
+@keyframes bar-fall {
+  0% {
+    filter: none;
+  }
+  25% {
+    filter: brightness(1.5) saturate(0.6);
+  }
+  100% {
+    filter: none;
+  }
+}
+
+.economy-row > span.flash-up b,
+.economy-row > span.flash-down b {
+  animation: value-rise 900ms ease-out;
+}
+
+.economy-row > span.flash-down b {
+  animation-name: value-fall;
+}
+
+/* ---------- command points ---------- */
+
+.ap-block i {
+  transform-origin: center;
+}
+
+.ap-block i.filled {
+  animation: ap-pop 560ms ease-out both;
+  animation-delay: calc(var(--pip, 0) * 55ms);
+}
+
+@keyframes ap-pop {
+  0% {
+    transform: scaleY(1);
+    box-shadow: none;
+  }
+  35% {
+    transform: scaleY(2.6);
+    box-shadow: 0 0 10px #d8c48f99;
+  }
+  100% {
+    transform: scaleY(1);
+    box-shadow: none;
+  }
+}
+
+/* ---------- order buttons ---------- */
+
+.action-button.is-fired {
+  animation: order-fired 720ms ease-out;
+}
+
+.action-button.is-fired .action-cost {
+  animation: value-rise 900ms ease-out;
+}
+
+@keyframes order-fired {
+  0% {
+    box-shadow: none;
+  }
+  18% {
+    box-shadow:
+      0 0 0 1px #d9c68f88,
+      0 0 26px #c0a46355;
+    transform: translateY(-1px);
+  }
+  100% {
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+.march-button.is-fired {
+  animation: order-fired 720ms ease-out;
+}
+
+/* A pulse travelling along a road while its army is still marching, plus a pop
+   when the column is first raised. */
+.march-token {
+  animation:
+    token-pulse 2.4s ease-in-out infinite,
+    token-spawn 460ms cubic-bezier(0.2, 1.5, 0.4, 1);
+}
+
+@keyframes token-pulse {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.92;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.12);
+    opacity: 1;
+  }
+}
+
+@keyframes token-spawn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+  70% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.18);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* ---------- values printed on the map ---------- */
+
+.city-troops.is-up {
+  animation: value-rise 900ms ease-out;
+}
+
+.city-troops.is-down {
+  animation: value-fall 900ms ease-out;
+}
+
+/* The city label sits under the banner, so its difference floats downwards and
+   stays centred on the number. */
+.city-troops .delta-chip {
+  top: auto;
+  bottom: -1.2em;
+  left: 50%;
+  font-size: 11px;
+  animation-name: delta-float-center;
+}
+
+@keyframes delta-float-center {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 5px) scale(0.9);
+  }
+  18% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  64% {
+    opacity: 1;
+    transform: translate(-50%, -3px);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -13px);
+  }
+}
+
+.legend b.flash-up {
+  animation: value-rise 900ms ease-out;
+}
+
+.legend b.flash-down {
+  animation: value-fall 900ms ease-out;
+}
+
+
+/* ---------- conquest feedback ---------- */
+
+.city.just-changed .city-halo {
+  animation: halo-burst 1500ms ease-out;
+}
+
+.city.just-changed .city-pin {
+  animation: pin-burst 900ms cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+.city.just-changed .city-banner {
+  animation: banner-raise 1100ms ease-out;
+}
+
+@keyframes halo-burst {
+  0% {
+    opacity: 0.25;
+    transform: scale(0.9);
+  }
+  22% {
+    opacity: 1;
+    transform: scale(2.1);
+    background: #d8c48f66;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+@keyframes pin-burst {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.34);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes banner-raise {
+  0% {
+    transform: translateY(6px) scale(0.94);
+    filter: brightness(1.6);
+  }
+  40% {
+    transform: translateY(0) scale(1);
+    filter: brightness(1.25);
+  }
+  100% {
+    filter: none;
+  }
+}
+
+/* ---------- reports, progress and dialogs ---------- */
+
+.latest-report p.is-new {
+  animation: report-in 620ms ease-out;
+}
+
+@keyframes report-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.domination-track i {
+  transition: width 760ms cubic-bezier(0.22, 0.8, 0.26, 1);
+}
+
+[data-slot='select-item'][data-selected] {
+  animation: option-chosen 700ms ease-out;
+}
+
+@keyframes option-chosen {
+  0% {
+    background: #6d7a4a44;
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-number-value,
+  .delta-chip,
+  .stat-row i,
+  .ap-block i.filled,
+  .action-button.is-fired,
+  .march-button.is-fired,
+  .march-token,
+  .city-troops,
+  .legend b,
+  .city.just-changed .city-halo,
+  .city.just-changed .city-pin,
+  .city.just-changed .city-banner,
+  .latest-report p.is-new,
+  [data-slot='select-item'][data-selected] {
+    animation: none !important;
+  }
+}

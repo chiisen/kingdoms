@@ -16,7 +16,7 @@ const TabsContext = createContext<TabsContextValue | null>(null);
 
 function useTabs(name: string) {
   const context = useContext(TabsContext);
-  if (!context) throw new Error(`${name} 必须在 Tabs 内使用。`);
+  if (!context) throw new Error(`${name} 必須在 Tabs 內使用。`);
   return context;
 }
 

@@ -56,54 +56,54 @@ export const FACTIONS = {
     title: '中原雄主',
     seal: '曹',
     color: '#79a8d3',
-    desc: '中原三城，名臣猛将兼备，内政与统军皆有所长。',
+    desc: '中原三城，名臣猛將兼備，內政與統軍皆有所長。',
     capital: 'xuchang',
-    motto: '挟天子以令诸侯',
+    motto: '挾天子以令諸侯',
     officers: ROSTERS.wei,
   },
   shu: {
-    name: '刘备',
-    title: '汉室之胄',
-    seal: '刘',
+    name: '劉備',
+    title: '漢室之胄',
+    seal: '劉',
     color: '#76bb98',
-    desc: '西部三城，勇将云集，可经永安东向争夺荆州。',
+    desc: '西部三城，勇將雲集，可經永安東向爭奪荊州。',
     capital: 'chengdu',
-    motto: '惟贤惟德，能服于人',
+    motto: '惟賢惟德，能服於人',
     officers: ROSTERS.shu,
   },
   wu: {
-    name: '孙权',
-    title: '江东之虎',
-    seal: '孙',
+    name: '孫權',
+    title: '江東之虎',
+    seal: '孫',
     color: '#d37c6c',
-    desc: '江淮三城，名帅善谋，可从江夏与下邳两面进取。',
+    desc: '江淮三城，名帥善謀，可從江夏與下邳兩面進取。',
     capital: 'jianye',
-    motto: '江东子弟多才俊',
+    motto: '江東子弟多才俊',
     officers: ROSTERS.wu,
   },
-  qun: { name: '群雄', title: '割据势力', seal: '袁', color: '#b6a688' },
+  qun: { name: '群雄', title: '割據勢力', seal: '袁', color: '#b6a688' },
 } as const;
 export const PLAYABLE: Playable[] = ['wei', 'shu', 'wu'];
 export const BALANCE = {
-  version: '2.0 · 百将风云',
+  version: '2.0 · 百將風雲',
   recruits: 2500,
   recruitCap: 40000,
   restTurns: 2,
   retreatBase: 0.16,
 };
 const cityData: [string, string, number, number, FactionId, number][] = [
-  ['xiliang', '西凉', 14, 19, 'shu', 9000],
-  ['changan', '长安', 29, 33, 'qun', 6000],
-  ['luoyang', '洛阳', 43, 28, 'wei', 11000],
-  ['yecheng', '邺城', 63, 16, 'wei', 9000],
-  ['xuchang', '许昌', 57, 39, 'wei', 16000],
+  ['xiliang', '西涼', 14, 19, 'shu', 9000],
+  ['changan', '長安', 29, 33, 'qun', 6000],
+  ['luoyang', '洛陽', 43, 28, 'wei', 11000],
+  ['yecheng', '鄴城', 63, 16, 'wei', 9000],
+  ['xuchang', '許昌', 57, 39, 'wei', 16000],
   ['xiapi', '下邳', 81, 35, 'wu', 9000],
-  ['hanzhong', '汉中', 22, 47, 'shu', 11000],
+  ['hanzhong', '漢中', 22, 47, 'shu', 11000],
   ['xinye', '新野', 47, 51, 'qun', 7500],
-  ['xiangyang', '襄阳', 46, 65, 'qun', 7500],
+  ['xiangyang', '襄陽', 46, 65, 'qun', 7500],
   ['jiangxia', '江夏', 64, 61, 'qun', 6000],
   ['jiangling', '江陵', 49, 81, 'qun', 7500],
-  ['jianye', '建业', 84, 57, 'wu', 16000],
+  ['jianye', '建業', 84, 57, 'wu', 16000],
   ['chaisang', '柴桑', 74, 77, 'wu', 11000],
   ['yongan', '永安', 32, 74, 'qun', 6000],
   ['chengdu', '成都', 13, 67, 'shu', 16000],
@@ -165,34 +165,34 @@ export const ACTIONS: Record<
   { name: string; gold: number; food: number; description: string }
 > = {
   farm: {
-    name: '开垦农田',
+    name: '開墾農田',
     gold: 850,
     food: 0,
-    description: '农业 +1 · 每回合军粮 +500',
+    description: '農業 +1 · 每回合軍糧 +500',
   },
   market: {
-    name: '发展商贸',
+    name: '發展商貿',
     gold: 1000,
     food: 0,
-    description: '商业 +1 · 每回合金钱 +180',
+    description: '商業 +1 · 每回合金錢 +180',
   },
   recruit: {
-    name: '征募兵卒',
+    name: '徵募兵卒',
     gold: 650,
     food: 1500,
-    description: '驻军 +2,500 · 新兵稀释士气',
+    description: '駐軍 +2,500 · 新兵稀釋士氣',
   },
   train: {
-    name: '操练军队',
+    name: '操練軍隊',
     gold: 450,
     food: 450,
-    description: '士气 +12 · 提高全军战力',
+    description: '士氣 +12 · 提高全軍戰力',
   },
   wall: {
-    name: '修筑城防',
+    name: '修築城防',
     gold: 650,
     food: 0,
-    description: '城防 +12 · 增强据城防御',
+    description: '城防 +12 · 增強據城防禦',
   },
 };
 const clone = (g: Game): Game => JSON.parse(JSON.stringify(g));
@@ -286,7 +286,7 @@ export function newGame(player: Playable = 'shu'): Game {
   g.turnStartCities = JSON.parse(JSON.stringify(g.cities));
   log(
     g,
-    `百将风云 · ${FACTIONS[player].name}领三城、三万六千兵起兵。108 位武将各展所长。`,
+    `百將風雲 · ${FACTIONS[player].name}領三城、三萬六千兵起兵。108 位武將各展所長。`,
     'good',
   );
   return g;
@@ -351,19 +351,19 @@ export function actionError(
 ): string | null {
   if (!ACTIONS[type]) return '未知城池指令。';
   const c = g.cities.find((c) => c.id === id);
-  if (g.status !== 'playing') return '战局已结束，请另启新局。';
+  if (g.status !== 'playing') return '戰局已結束，請另啟新局。';
   if (!c || c.owner !== owner) return '只能向己方城池下令。';
-  if (ap < 1) return '本回合政令已用尽。';
+  if (ap < 1) return '本回合政令已用盡。';
   const q = actionQuote(g, type, id, owner, chosen),
     r = g.resources[owner];
-  if (!q.officer) return '没有可执行指令的待命武将。';
-  if (r.gold < q.gold || r.food < q.food) return '钱粮不足，请等待下回合产出。';
+  if (!q.officer) return '沒有可執行指令的待命武將。';
+  if (r.gold < q.gold || r.food < q.food) return '錢糧不足，請等待下回合產出。';
   if ((type === 'farm' && c.farm >= 5) || (type === 'market' && c.market >= 5))
-    return '已达到五级上限。';
-  if (type === 'train' && c.morale >= 100) return '士气已满。';
-  if (type === 'wall' && c.wall >= 100) return '城防已满。';
+    return '已達到五級上限。';
+  if (type === 'train' && c.morale >= 100) return '士氣已滿。';
+  if (type === 'wall' && c.wall >= 100) return '城防已滿。';
   if (type === 'recruit' && c.troops + BALANCE.recruits > BALANCE.recruitCap)
-    return '本城征兵上限四万，剩余位置不足2,500人。';
+    return '本城徵兵上限四萬，剩餘位置不足2,500人。';
   return null;
 }
 function perform(
@@ -472,20 +472,20 @@ export function marchError(
   owner: Playable = g.player,
   ap = g.ap,
 ): string | null {
-  if (g.status !== 'playing') return '战局已结束。';
+  if (g.status !== 'playing') return '戰局已結束。';
   if (ap < 1) return '政令不足。';
   const c = g.cities.find((c) => c.id === from),
     target = g.cities.find((c) => c.id === to);
-  if (!c || c.owner !== owner || !target) return '出发城池无效。';
-  if (!neighbors(from).includes(to)) return '只能行军至道路相连的城池。';
+  if (!c || c.owner !== owner || !target) return '出發城池無效。';
+  if (!neighbors(from).includes(to)) return '只能行軍至道路相連的城池。';
   if (!Number.isInteger(troops) || troops < 1000 || troops > c.troops - 1000)
-    return '至少出兵一千，且须留守一千兵卒。';
+    return '至少出兵一千，且須留守一千兵卒。';
   const o = FACTIONS[owner].officers.find((o) => o.id === officerId);
   if (!o || !officerAvailable(g, officerId))
-    return '该武将正在执行军令或休整。';
+    return '該武將正在執行軍令或休整。';
   if (troops > leaderCapacity(o))
-    return `${o.name}最多统领${leaderCapacity(o).toLocaleString()}兵，请分兵出征。`;
-  if (g.resources[owner].food < marchFood(troops, o)) return '出征军粮不足。';
+    return `${o.name}最多統領${leaderCapacity(o).toLocaleString()}兵，請分兵出征。`;
+  if (g.resources[owner].food < marchFood(troops, o)) return '出征軍糧不足。';
   return null;
 }
 function dispatch(
@@ -515,7 +515,7 @@ function dispatch(
   });
   log(
     g,
-    `${FACTIONS[owner].name}军 · ${o.name}率${troops.toLocaleString()}兵，自${c.name}进军${getCity(g, to).name}。`,
+    `${FACTIONS[owner].name}軍 · ${o.name}率${troops.toLocaleString()}兵，自${c.name}進軍${getCity(g, to).name}。`,
     'war',
   );
 }
@@ -812,7 +812,7 @@ export function checkOutcome(g: Game) {
     g.status = 'won';
 }
 export function endTurn(game: Game): Game {
-  if (game.status !== 'playing') throw new Error('战局已结束。');
+  if (game.status !== 'playing') throw new Error('戰局已結束。');
   const g = clone(game);
   const order = PLAYABLE.slice(g.turn % 3).concat(
     PLAYABLE.slice(0, g.turn % 3),
@@ -833,7 +833,7 @@ export function endTurn(game: Game): Game {
       target.troops = total;
       log(
         g,
-        `${o.name}抵达${target.name}，增援${a.troops.toLocaleString()}兵。`,
+        `${o.name}抵達${target.name}，增援${a.troops.toLocaleString()}兵。`,
       );
       continue;
     }
@@ -846,7 +846,7 @@ export function endTurn(game: Game): Game {
       target.occupation = 2;
       log(
         g,
-        `${o.name}攻克${target.name}！余部${result.survivors.toLocaleString()}兵，安民两回合。`,
+        `${o.name}攻克${target.name}！餘部${result.survivors.toLocaleString()}兵，安民兩回合。`,
         a.owner === g.player ? 'good' : 'war',
       );
     } else {
@@ -870,7 +870,7 @@ export function endTurn(game: Game): Game {
       }
       log(
         g,
-        `${o.name}攻打${target.name}失利${retreatCity ? `，${result.retreat.toLocaleString()}兵撤至${retreatCity.name}` : '，退路断绝'}。`,
+        `${o.name}攻打${target.name}失利${retreatCity ? `，${result.retreat.toLocaleString()}兵撤至${retreatCity.name}` : '，退路斷絕'}。`,
         'war',
       );
     }
@@ -886,7 +886,7 @@ export function endTurn(game: Game): Game {
         c.troops = Math.floor(c.troops * 0.92);
         c.morale = Math.max(30, c.morale - 8);
       }
-      log(g, `${FACTIONS[f].name}粮尽，军队减员8%。`, 'war');
+      log(g, `${FACTIONS[f].name}糧盡，軍隊減員8%。`, 'war');
     }
   }
   for (const c of g.cities) c.occupation = Math.max(0, c.occupation - 1);
@@ -894,9 +894,9 @@ export function endTurn(game: Game): Game {
   g.turnStartCities = JSON.parse(JSON.stringify(g.cities));
   g.ap = maxAP(g);
   checkOutcome(g);
-  if (g.status === 'won') log(g, '十五城尽归麾下，天下一统！', 'good');
-  else if (g.status === 'lost') log(g, '最后一城失守，且待重整旗鼓。', 'war');
-  else log(g, `${dateLabel(g.turn)} · 钱粮已入库，休整结束的武将重新待命。`);
+  if (g.status === 'won') log(g, '十五城盡歸麾下，天下一統！', 'good');
+  else if (g.status === 'lost') log(g, '最後一城失守，且待重整旗鼓。', 'war');
+  else log(g, `${dateLabel(g.turn)} · 錢糧已入庫，休整結束的武將重新待命。`);
   return g;
 }
 export function dateLabel(turn: number) {
@@ -906,7 +906,7 @@ export const STORAGE_KEY = 'sanguo-jiangshan-v1';
 export function loadGame(raw: string): Game {
   const data = JSON.parse(raw);
   const fail = (): never => {
-    throw new Error('存档损坏或版本不兼容。');
+    throw new Error('存檔損壞或版本不兼容。');
   };
   const finite = (v: unknown, min: number, max: number) =>
     typeof v === 'number' &&
@@ -1046,7 +1046,7 @@ export function loadGame(raw: string): Game {
   if (migrated)
     log(
       g,
-      '旧战局已保留，108位武将与新规则现已生效；新开局采用三方均衡配置。',
+      '舊戰局已保留，108位武將與新規則現已生效；新開局採用三方均衡配置。',
       'good',
     );
   return g;

@@ -28,7 +28,7 @@ const SelectContext = createContext<SelectContextValue | null>(null);
 
 function useSelect(name: string) {
   const context = useContext(SelectContext);
-  if (!context) throw new Error(`${name} 必须在 Select 内使用。`);
+  if (!context) throw new Error(`${name} 必須在 Select 內使用。`);
   return context;
 }
 

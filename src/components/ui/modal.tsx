@@ -25,7 +25,7 @@ const ModalContext = createContext<ModalContextValue | null>(null);
 
 export function useModal(name: string) {
   const context = useContext(ModalContext);
-  if (!context) throw new Error(`${name} 必须在 Dialog 或 AlertDialog 内使用。`);
+  if (!context) throw new Error(`${name} 必須在 Dialog 或 AlertDialog 內使用。`);
   return context;
 }
 
@@ -78,7 +78,7 @@ export function ModalContent({
   className,
   children,
   showCloseButton = false,
-  closeLabel = '关闭',
+  closeLabel = '關閉',
 }: {
   slot: string;
   overlaySlot: string;

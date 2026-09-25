@@ -77,9 +77,11 @@ export function AlertDialogDescription({
 export function AlertDialogCancel({
   className,
   children,
+  onClick,
 }: {
   className?: string;
   children?: ReactNode;
+  onClick?: () => void;
 }) {
   const context = useModal('AlertDialogCancel');
   return (
@@ -87,7 +89,10 @@ export function AlertDialogCancel({
       type="button"
       data-slot="alert-dialog-cancel"
       className={className}
-      onClick={() => context.setOpen(false)}
+      onClick={() => {
+        onClick?.();
+        context.setOpen(false);
+      }}
     >
       {children}
     </button>
