@@ -1,0 +1,309 @@
+/* Base styles for the interface primitives in components/ui.
+   The game theme in globals.css refines these for the in-game dialogs,
+   selects, tabs and sliders; these rules keep them usable everywhere. */
+
+/* ---------- Dialog / AlertDialog ---------- */
+
+[data-slot='dialog-overlay'],
+[data-slot='alert-dialog-overlay'] {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: #0009;
+  animation: ui-fade-in 140ms ease-out;
+}
+
+[data-slot='dialog-content'],
+[data-slot='alert-dialog-content'] {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 51;
+  display: grid;
+  gap: 16px;
+  width: min(480px, calc(100% - 32px));
+  padding: 26px;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 6px);
+  background: var(--popover);
+  color: var(--popover-foreground);
+  box-shadow: 0 24px 90px #000000aa;
+  animation: ui-pop-in 160ms ease-out;
+}
+
+[data-slot='dialog-content']:focus,
+[data-slot='alert-dialog-content']:focus {
+  outline: none;
+}
+
+[data-slot='dialog-close'] {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md, 4px);
+  background: transparent;
+  color: var(--muted-foreground);
+  cursor: pointer;
+}
+
+[data-slot='dialog-close']:hover {
+  background: #ffffff14;
+  color: var(--foreground);
+}
+
+[data-slot='dialog-title'] {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+[data-slot='dialog-description'] {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ---------- Select ---------- */
+
+[data-slot='select-trigger'] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg, 6px);
+  background: var(--secondary);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+[data-slot='select-trigger']:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+[data-slot='select-trigger']:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 1px;
+}
+
+[data-slot='select-value'] {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+[data-slot='select-content'] {
+  position: fixed;
+  z-index: 60;
+  min-width: 140px;
+  padding: 6px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 6px);
+  background: var(--popover);
+  color: var(--popover-foreground);
+  box-shadow: 0 18px 60px #000000bb;
+  animation: ui-pop-in 120ms ease-out;
+}
+
+[data-slot='select-item'] {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px 10px;
+  border-radius: var(--radius-md, 4px);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+[data-slot='select-item']:hover,
+[data-slot='select-item']:focus {
+  background: var(--accent);
+  color: var(--foreground);
+  outline: none;
+}
+
+[data-slot='select-item'][data-selected] {
+  color: var(--gold);
+}
+
+/* ---------- Slider ---------- */
+
+.ui-slider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 24px;
+  touch-action: none;
+  user-select: none;
+}
+
+.ui-slider[data-disabled] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+[data-slot='slider-track'] {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--muted);
+}
+
+[data-slot='slider-range'] {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--primary);
+}
+
+[data-slot='slider-thumb'] {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  margin-left: -8px;
+  transform: translateY(-50%);
+  border: 1px solid var(--ring);
+  border-radius: 50%;
+  background: #fff;
+  cursor: grab;
+}
+
+[data-slot='slider-thumb']:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.ui-slider[data-dragging] [data-slot='slider-thumb'] {
+  cursor: grabbing;
+}
+
+/* ---------- Tabs ---------- */
+
+[data-slot='tabs'] {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+[data-slot='tabs-list'] {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px;
+  border-radius: var(--radius-lg, 6px);
+  background: var(--muted);
+}
+
+[data-slot='tabs-trigger'] {
+  flex: 1;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: var(--radius-md, 4px);
+  background: transparent;
+  color: var(--muted-foreground);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+[data-slot='tabs-trigger'][data-active] {
+  background: var(--secondary);
+  color: var(--foreground);
+}
+
+[data-slot='tabs-trigger']:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 1px;
+}
+
+[data-slot='tabs-content'] {
+  outline: none;
+}
+
+/* ---------- Input ---------- */
+
+[data-slot='input'] {
+  width: 100%;
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg, 6px);
+  background: var(--secondary);
+  color: inherit;
+  font: inherit;
+}
+
+[data-slot='input']::placeholder {
+  color: var(--muted-foreground);
+}
+
+[data-slot='input']:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 1px;
+}
+
+[data-slot='input']:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@keyframes ui-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ui-pop-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* The select popup is anchored, not centred, so it only fades. */
+[data-slot='select-content'] {
+  animation-name: ui-fade-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-slot='dialog-content'],
+  [data-slot='alert-dialog-content'],
+  [data-slot='dialog-overlay'],
+  [data-slot='alert-dialog-overlay'],
+  [data-slot='select-content'] {
+    animation: none;
+  }
+}
