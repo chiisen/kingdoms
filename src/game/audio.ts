@@ -319,21 +319,23 @@ export function scoreDuration(score: Score) {
 
 type Ctx = BaseAudioContext;
 
+/** One deterministic noise buffer per audio context, reused by every percussion hit. */
+const noiseBuffers = new WeakMap<Ctx, AudioBuffer>();
+
 function noiseBuffer(ctx: Ctx) {
-  const cache = ctx as Ctx & { __noise?: AudioBuffer };
-  if (!cache.__noise) {
-    const frames = Math.floor(ctx.sampleRate * 0.6);
-    const buffer = ctx.createBuffer(1, frames, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    let seed = 0x2f6e2b1;
-    for (let i = 0; i < frames; i++) {
-      // Deterministic noise keeps every render of a sound identical.
-      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
-      data[i] = (seed / 0x3fffffff - 1) * 0.9;
-    }
-    cache.__noise = buffer;
+  const cached = noiseBuffers.get(ctx);
+  if (cached) return cached;
+  const frames = Math.floor(ctx.sampleRate * 0.6);
+  const buffer = ctx.createBuffer(1, frames, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  let seed = 0x2f6e2b1;
+  for (let i = 0; i < frames; i++) {
+    // Deterministic noise keeps every render of a sound identical.
+    seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+    data[i] = (seed / 0x3fffffff - 1) * 0.9;
   }
-  return cache.__noise;
+  noiseBuffers.set(ctx, buffer);
+  return buffer;
 }
 
 function noiseBurst(
@@ -638,13 +640,14 @@ const LOOKAHEAD_MS = 60;
 const SCHEDULE_AHEAD = 1.2;
 const MUSIC_GAIN = 0.34;
 
+/** Sound starts muted: the player turns it on from the speaker button. */
 export function readStoredSound() {
   try {
     const raw = localStorage.getItem(AUDIO_STORAGE_KEY);
-    if (raw === null) return true;
+    if (raw === null) return false;
     return raw === 'on';
   } catch {
-    return true;
+    return false;
   }
 }
 

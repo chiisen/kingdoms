@@ -51,6 +51,7 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import * as E from './engine';
+import { SIMPLIFIED_FORMS } from './search-forms';
 import Portrait from './Portrait';
 import AnimatedNumber, {
   useOwnerChanges,
@@ -210,11 +211,16 @@ export default function Game() {
       : rosterFilter === 'all'
         ? E.ALL_OFFICERS
         : E.FACTIONS[rosterFilter as Playable].officers
-  ).filter((o) => `${o.name}${o.role}${o.specialty}`.includes(query.trim()));
+  ).filter((o) =>
+    // Both spellings are searched, so a Simplified query finds a Traditional name.
+    `${o.name}${o.role}${o.specialty}${SIMPLIFIED_FORMS[o.id] ?? ''}`.includes(
+      query.trim(),
+    ),
+  );
   const available = me.officers.filter((o) => E.officerAvailable(g, o.id));
   const targets = E.neighbors(selected).map((id) => E.getCity(g, id));
   const targetCity = g.cities.find((c) => c.id === target);
-  const changedCities = useOwnerChanges(g.cities.map((city) => city.owner));
+  const changedCities = useOwnerChanges(g.cities.map((town) => town.owner));
   const chosenOfficer = E.getOfficer(officer);
   const marchLimit = Math.max(
     1000,

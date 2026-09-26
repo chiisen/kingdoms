@@ -164,6 +164,67 @@ describe('the game shell', () => {
     expect(document.querySelectorAll('.officer-card')).toHaveLength(108);
   });
 
+  it('finds officers by name or speciality in either script', () => {
+    vi.useFakeTimers();
+    startCampaign();
+    fireEvent.click(button('武將')!);
+    const search = document.querySelector(
+      '.roster-controls [data-slot=input]',
+    ) as HTMLInputElement;
+    const names = () =>
+      Array.from(document.querySelectorAll('.officer-card h3')).map((h) => h.textContent);
+    const type = (value: string) => fireEvent.change(search, { target: { value } });
+
+    expect(names()).toHaveLength(36);
+
+    type('諸葛亮');
+    expect(names()).toEqual(['諸葛亮']);
+    // The same officer is found when the query is typed in Simplified Chinese.
+    type('诸葛亮');
+    expect(names()).toEqual(['諸葛亮']);
+
+    type('趙雲');
+    expect(names()).toEqual(['趙雲']);
+    type('赵云');
+    expect(names()).toEqual(['趙雲']);
+
+    type('龐統');
+    const traditional = names();
+    type('庞统');
+    expect(names()).toEqual(traditional);
+    expect(traditional).toEqual(['龐統']);
+
+    // Specialities are searched the same way.
+    type('謀士');
+    const traditionalSpeciality = names().length;
+    expect(traditionalSpeciality).toBeGreaterThan(0);
+    type('谋士');
+    expect(names()).toHaveLength(traditionalSpeciality);
+
+    type('');
+    expect(names()).toHaveLength(36);
+  });
+
+  it('starts muted and remembers the choice', () => {
+    vi.useFakeTimers();
+    render(<Game />);
+
+    const toggle = () =>
+      document.querySelector('.icon-button[aria-pressed]') as HTMLElement | null;
+    expect(toggle()?.getAttribute('aria-pressed')).toBe('false');
+    expect(toggle()?.getAttribute('aria-label')).toContain('開啟');
+    // Nothing is written until the player decides.
+    expect(localStorage.getItem('sanguo-jiangshan-audio')).toBeNull();
+
+    fireEvent.click(toggle()!);
+    expect(localStorage.getItem('sanguo-jiangshan-audio')).toBe('on');
+    expect(toggle()?.getAttribute('aria-pressed')).toBe('true');
+
+    fireEvent.click(toggle()!);
+    expect(localStorage.getItem('sanguo-jiangshan-audio')).toBe('off');
+    expect(toggle()?.getAttribute('aria-pressed')).toBe('false');
+  });
+
   it('restores the campaign that was saved in the browser', () => {
     vi.useFakeTimers();
     startCampaign();

@@ -274,3 +274,46 @@ src/
 - 渲染出來的版面與動畫流暢度（需要會推進動畫時鐘的瀏覽器；以人工確認）。
 - 可聽見的音訊（以 `OfflineAudioContext` 離線渲染量測音量，屬於人工驗證而非 CI 測試）。
 - 遊戲規則層的整合仍以引擎測試為主；UI 測試只覆蓋介面契約與演出邏輯，不重複驗證規則數值。
+
+---
+
+## 11. 第六輪：lint、簡繁搜尋、預設靜音
+
+### 11.1 需求
+
+使用者逐項回覆上一輪列出的待辦：第 5 項（E2E／渲染層自動化）只記錄 issue 先不做、第 6 項補 lint、第 7 項（`docs/reference/` 簡體文件）先不動、第 8 項可轉換但要保證簡繁都能搜尋、第 9 項自己關預覽伺服器、第 10 項音效預設靜音、第 11 項同步待辦狀態。
+
+### 11.2 lint（第 6 項）
+
+採用與上游相同的 **oxlint**（不安裝 ESLint 生態）。`.oxlintrc.json` 開啟 correctness、suspicious、perf 三類共 131 條規則，只關閉兩條風格規則並在 README 說明理由：`unicorn/no-array-sort`（本專案都是「先複製再排序」，警告不成立）與 `unicorn/consistent-function-scoping`（與移植過來的上游風格衝突）。
+
+開啟後共 39 個警告，其中真實問題都修掉了：
+
+- `eslint/no-shadow` ×14：`src/components/ui/slider.tsx` 的解構改名（`min`/`max`/`step` → `low`/`high`/`size`）、`Game.tsx` 的 `city` 參數改名，以及 `engine.ts` 八處回呼參數（`c`/`o`/`a`）改成 `city`/`officer`/`army`/`x`/`y`。引擎的改名以 23 項引擎測試＋32 項介面測試確認行為不變。
+- `eslint/no-underscore-dangle` ×3：`audio.ts` 的噪音快取原本掛在 audio context 上的 `__noise`，改成模組層 `WeakMap<BaseAudioContext, AudioBuffer>`，語意相同但不再需要底線命名。
+
+最終 `npm run lint` 零警告零錯誤；`package.json` 新增 `lint` 與 `lint:fix`。**未採用** `oxfmt`（格式化會產生大量與上游無關的差異），這點記在 README 的技術選型表。
+
+### 11.3 簡繁雙向搜尋（第 8 項）
+
+需求是「可以轉換，但要保證簡繁都能搜尋到」。若在瀏覽器端引入 OpenCC，函式庫與字典會明顯增加 bundle；因此改為**在撰寫期產生對照表**：
+
+- `scripts/build-search-forms.mjs` 用 esbuild 打包 `officers.ts` 取得結構化資料，再用 OpenCC（`tw` → `cn`）產生每位武將「姓名＋定位＋專長」的簡體寫法，寫入 `src/game/search-forms.ts`（108 筆、約 8 KB，內含註解標示為產生檔）。
+- 圖鑑過濾改成比對「繁體欄位 ＋ 該武將的簡體寫法」，因此繁體查詢與簡體查詢都會命中同一位武將；執行期不需要任何轉換函式庫。
+- `scripts/test-text.mjs` 新增兩項守衛：產生檔是否與 `officers.ts` 同步（不同步就提示重跑產生指令），以及幾個「每個字都不同」的名字（諸葛亮／趙雲／張飛／龐統／黃蓋）確實有簡體寫法。
+- `src/game/__tests__/Game.test.tsx` 新增介面層驗證：以繁體與簡體分別查詢姓名與專長，結果必須一致。
+
+### 11.4 音效預設靜音（第 10 項）
+
+`readStoredSound()` 在沒有紀錄時改回傳 `false`（原本是 `true`），因此首次載入是靜音，由右上角喇叭開啟；開啟的那次點擊同時滿足瀏覽器的自動播放限制。音訊測試與介面測試各加一條斷言「未設定時為靜音」「開關會寫入偏好」，README 的播放規則也同步更新。
+
+### 11.5 記錄 issue（第 5 項）
+
+把「渲染層與音訊的端對端驗收」開成 issue #1，內容包含未自動化的範圍、暫緩理由（自動化面板不推進動畫時鐘、易 flaky）與未來若補只寫兩條關鍵 spec 的建議範圍。第 7 項（`docs/reference/` 簡體文件）依指示維持原樣；第 9 項（預覽伺服器）由使用者自行關閉。
+
+### 11.6 這一輪的驗證
+
+- `npm test`：69 項（引擎 23、音訊 9、文字 5、介面 32）全數通過。
+- `npm run lint`：0 warnings / 0 errors（131 條規則）。
+- `npm run typecheck`、`npm run build`：通過。
+- 引擎的變數改名後重跑全部測試，行為不變（測試即為回歸證明）。

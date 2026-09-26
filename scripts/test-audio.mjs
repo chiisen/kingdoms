@@ -193,7 +193,8 @@ test('the arrangement develops: bare opening, pipa entry, bowed B, thin bridge',
 test('a missing Web Audio implementation is reported instead of crashing', () => {
   const ctx = stubContext();
   assert.equal(typeof A.renderScoreOffline, 'function');
-  assert.equal(typeof A.readStoredSound(), 'boolean');
+  // Sound is off until the player asks for it, so an unset preference is muted.
+  assert.equal(A.readStoredSound(), false);
   assert.equal(typeof A.setSoundEnabled, 'function');
   assert.doesNotThrow(() => A.setSoundEnabled(false));
   assert.equal(A.isSoundEnabled(), false);

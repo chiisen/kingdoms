@@ -350,7 +350,7 @@ export function actionError(
   chosen?: string,
 ): string | null {
   if (!ACTIONS[type]) return '未知城池指令。';
-  const c = g.cities.find((c) => c.id === id);
+  const c = g.cities.find((city) => city.id === id);
   if (g.status !== 'playing') return '戰局已結束，請另啟新局。';
   if (!c || c.owner !== owner) return '只能向己方城池下令。';
   if (ap < 1) return '本回合政令已用盡。';
@@ -474,13 +474,13 @@ export function marchError(
 ): string | null {
   if (g.status !== 'playing') return '戰局已結束。';
   if (ap < 1) return '政令不足。';
-  const c = g.cities.find((c) => c.id === from),
-    target = g.cities.find((c) => c.id === to);
+  const c = g.cities.find((city) => city.id === from),
+    target = g.cities.find((city) => city.id === to);
   if (!c || c.owner !== owner || !target) return '出發城池無效。';
   if (!neighbors(from).includes(to)) return '只能行軍至道路相連的城池。';
   if (!Number.isInteger(troops) || troops < 1000 || troops > c.troops - 1000)
     return '至少出兵一千，且須留守一千兵卒。';
-  const o = FACTIONS[owner].officers.find((o) => o.id === officerId);
+  const o = FACTIONS[owner].officers.find((officer) => officer.id === officerId);
   if (!o || !officerAvailable(g, officerId))
     return '該武將正在執行軍令或休整。';
   if (troops > leaderCapacity(o))
@@ -557,7 +557,7 @@ export function planningGarrison(g: Game, target: City): City {
 function projectedTarget(g: Game, target: City, owner: Playable): City {
   const result = planningGarrison(g, target);
   for (const a of g.armies.filter(
-    (a) => a.to === target.id && a.owner === owner,
+    (army) => army.to === target.id && army.owner === owner,
   )) {
     if (result.owner === owner) result.troops += a.troops;
     else {
@@ -643,7 +643,7 @@ function ai(g: Game, owner: Playable, budget = maxAP(g, owner)) {
       const c = cities
         .slice()
         .sort((a, b) => a.farm - b.farm)
-        .find((c) => !actionError(g, 'farm', c.id, owner, ap));
+        .find((city) => !actionError(g, 'farm', city.id, owner, ap));
       if (c) {
         perform(g, 'farm', c, owner);
         used++;
@@ -788,7 +788,7 @@ function ai(g: Game, owner: Playable, budget = maxAP(g, owner)) {
     const c = cities
       .slice()
       .sort((a, b) => a.market - b.market)
-      .find((c) => !actionError(g, type, c.id, owner, ap));
+      .find((city) => !actionError(g, type, city.id, owner, ap));
     if (c) {
       perform(g, type, c, owner);
       used++;
@@ -858,7 +858,7 @@ export function endTurn(game: Game): Game {
             ? origin
             : owned(g, a.owner)
                 .slice()
-                .sort((a, b) => a.troops - b.troops)[0];
+                .sort((x, y) => x.troops - y.troops)[0];
       if (retreatCity) {
         const total = retreatCity.troops + result.retreat;
         retreatCity.morale = Math.round(

@@ -37,9 +37,9 @@ export function Slider({
   latest.current = { min, max, step, onValueChange };
 
   const clamp = useCallback((raw: number) => {
-    const { min, max, step } = latest.current;
-    const stepped = min + Math.round((raw - min) / step) * step;
-    return Math.max(min, Math.min(max, stepped));
+    const { min: low, max: high, step: size } = latest.current;
+    const stepped = low + Math.round((raw - low) / size) * size;
+    return Math.max(low, Math.min(high, stepped));
   }, []);
 
   function commit(raw: number) {
@@ -50,8 +50,8 @@ export function Slider({
   function valueAt(clientX: number) {
     const rect = track.current?.getBoundingClientRect();
     if (!rect || !rect.width) return current;
-    const { min, max } = latest.current;
-    return min + ((clientX - rect.left) / rect.width) * (max - min);
+    const { min: low, max: high } = latest.current;
+    return low + ((clientX - rect.left) / rect.width) * (high - low);
   }
 
   useEffect(() => {

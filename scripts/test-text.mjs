@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import * as OpenCC from 'opencc-js';
+import { buildSearchForms } from './build-search-forms.mjs';
 
 /* The interface is Traditional Chinese. This guard converts every source file
    back with OpenCC (cn -> tw): if the result differs, the file still contains
@@ -71,6 +72,35 @@ test('the levy character is only used for recruiting, never for marching', () =>
         `${file} uses ${wrong}; Traditional Chinese keeps 征 there (${right})`,
       );
     }
+  }
+});
+
+test('the Simplified search forms match the roster', async () => {
+  // The roster search accepts either script by keeping a Simplified record
+  // beside the Traditional text; that record has to be regenerated with the data.
+  const normaliseEndings = (text) => text.replace(/\r\n/g, '\n');
+  const committed = readFileSync('src/game/search-forms.ts', 'utf8');
+  const generated = await buildSearchForms();
+  assert.equal(
+    normaliseEndings(committed),
+    normaliseEndings(generated),
+    'run `node scripts/build-search-forms.mjs` to refresh src/game/search-forms.ts',
+  );
+});
+
+test('no officer is missing a Simplified spelling of a different character', async () => {
+  const bundle = readFileSync('src/game/search-forms.ts', 'utf8');
+  const toSimplified = OpenCC.Converter({ from: 'tw', to: 'cn' });
+  // Spot checks that matter most: names whose every character differs.
+  for (const [traditional, simplified] of [
+    ['諸葛亮', '诸葛亮'],
+    ['趙雲', '赵云'],
+    ['張飛', '张飞'],
+    ['龐統', '庞统'],
+    ['黃蓋', '黄盖'],
+  ]) {
+    assert.equal(toSimplified(traditional), simplified, `${traditional} -> ${simplified}`);
+    assert(bundle.includes(simplified), `${simplified} is missing from the search forms`);
   }
 });
 
